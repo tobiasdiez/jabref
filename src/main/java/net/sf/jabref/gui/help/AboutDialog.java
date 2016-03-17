@@ -15,54 +15,39 @@
 */
 package net.sf.jabref.gui.help;
 
-import net.sf.jabref.Globals;
-import net.sf.jabref.gui.JabRefFrame;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.DialogPane;
+import javafx.scene.image.Image;
+import net.sf.jabref.JabRef;
+import net.sf.jabref.JabRefMain;
+import net.sf.jabref.gui.FXAlert;
 import net.sf.jabref.logic.l10n.Localization;
 
-import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import java.awt.*;
-import java.util.Objects;
+public class AboutDialog extends FXAlert {
 
-public class AboutDialog extends JDialog {
+    private final Log logger = LogFactory.getLog(AboutDialog.class);
 
-    public AboutDialog(JabRefFrame bf) {
-        super(Objects.requireNonNull(bf), Localization.lang("About JabRef"), true);
-        setSize(new Dimension(750, 600));
-        setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout());
+    public AboutDialog() {
+        super(AlertType.INFORMATION, Localization.lang("About JabRef"));
 
-        JTextPane textArea = new JTextPane();
-
-        textArea.setEditable(false);
-        textArea.setCursor(null);
-        textArea.setOpaque(false);
-        textArea.setFocusable(false);
-
-        // center everything
-        StyledDocument doc = textArea.getStyledDocument();
-        SimpleAttributeSet center = new SimpleAttributeSet();
-        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-        doc.setParagraphAttributes(0, doc.getLength(), center, false);
-
-        panel.add(new JScrollPane(textArea));
-
-        String text = String.format("JabRef %s%n2003-%s%n%s%n%s%n%nDevelopers: %s%n%nAuthors: %s%n%nExternal Libraries: %s%nCode: %s",
-                Globals.BUILD_INFO.getVersion(),
-                Globals.BUILD_INFO.getYear(),
-                "http://www.jabref.org",
-                "GNU General Public License v2 or later",
-                Globals.BUILD_INFO.getDevelopers(),
-                Globals.BUILD_INFO.getAuthors(),
-                "https://github.com/JabRef/jabref/blob/master/external-libraries.txt",
-                "https://github.com/JabRef/jabref");
-
-        textArea.setText(text);
-
-        getContentPane().add(panel);
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        try (InputStream imageStream = JabRef.class.getResourceAsStream("/images/external/JabRef-icon-48.png");
+                InputStream fxmlStream = JabRef.class.getResourceAsStream("/gui/help/AboutDialogLayout.fxml");) {
+            DialogPane aboutDialogContentPane = (DialogPane) fxmlLoader.load(fxmlStream);
+            Image jabRefIcon = new Image(imageStream);
+            setDialogIcon(jabRefIcon);
+            setDialogPane(aboutDialogContentPane);
+            setDialogStyle(JabRefMain.class.getResource("/gui/help/AboutDialog.css").toExternalForm());
+        } catch (IOException e) {
+            logger.debug("AboutDialog could not be completely loaded!", e);
+        }
     }
+
 }

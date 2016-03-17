@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
+import javafx.application.Platform;
 import net.sf.jabref.gui.actions.MnemonicAwareAction;
 
 public class AboutAction extends MnemonicAwareAction {
@@ -33,6 +34,6 @@ public class AboutAction extends MnemonicAwareAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        dialog.setVisible(true);
+        Platform.runLater(() -> dialog.show());
     }
 }

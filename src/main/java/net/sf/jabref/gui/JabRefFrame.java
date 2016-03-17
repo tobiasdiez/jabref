@@ -178,7 +178,7 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
     private final FileHistoryMenu fileHistory = new FileHistoryMenu(prefs, this);
 
     // The help window.
-    private final AboutDialog aboutDiag = new AboutDialog(this);
+    private AboutDialog aboutDialog = null;
 
     // Here we instantiate menu/toolbar actions. Actions regarding
     // the currently open database are defined as a GeneralAction
@@ -205,8 +205,7 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
     private final AbstractAction donationAction = new DonateAction();
     private final AbstractAction help = new HelpAction(Localization.menuTitle("JabRef help"), Localization.lang("JabRef help"),
             HelpFiles.helpContents, Globals.getKeyPrefs().getKey(KeyBinding.HELP));
-    private final AbstractAction about = new AboutAction(Localization.menuTitle("About JabRef"), aboutDiag,
-            Localization.lang("About JabRef"), IconTheme.getImage("about"));
+    private AbstractAction about = null;
     private final AbstractAction editEntry = new GeneralAction(Actions.EDIT, Localization.menuTitle("Edit entry"),
             Localization.lang("Edit entry"), Globals.getKeyPrefs().getKey(KeyBinding.EDIT_ENTRY), IconTheme.JabRefIcon.EDIT_ENTRY.getIcon());
     private final AbstractAction focusTable = new GeneralAction(Actions.FOCUS_TABLE,
@@ -565,12 +564,15 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
 
                 if (OS.OS_X) {
                     JabRefFrame.this.setVisible(false);
+                    hideFXWindowsOnMac();
                 } else {
                     new CloseAction().actionPerformed(null);
                 }
             }
         });
 
+        initComponentsInFXThread();
+        
         initSidePane();
 
         initLayout();
@@ -640,6 +642,20 @@ public class JabRefFrame extends JFrame implements OutputPrinter {
                 LOGGER.fatal("Could not interface with Mac OS X methods.", e);
             }
         }
+    }
+    
+    private void initComponentsInFXThread() {
+        Platform.runLater(() -> {
+            aboutDialog = new AboutDialog();
+            about = new AboutAction(Localization.menuTitle("About JabRef"), this.aboutDialog,
+                    Localization.lang("About JabRef"), IconTheme.getImage("about"));
+        });
+    }
+    
+    private void hideFXWindowsOnMac() {
+        Platform.runLater(() -> {
+            JabRef.jrf.aboutDialog.hide();
+        });
     }
 
     private void positionWindowOnScreen() {
