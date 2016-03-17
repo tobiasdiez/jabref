@@ -18,6 +18,8 @@ package net.sf.jabref.gui.help;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,129 +38,27 @@ import net.sf.jabref.logic.l10n.Localization;
 
 public class AboutDialogController {
 
-    private final Log logger = LogFactory.getLog(AboutDialogController.class);
+    public StringProperty aboutYearProperty() {
+        return aboutYear;
+    }
 
-    @FXML
-    private Label aboutHeading;
+    public String getAboutYear() {
+        return aboutYear.get();
+    }
 
-    @FXML
-    private Label aboutYear;
+    private final StringProperty aboutYear;
 
-    @FXML
-    private Hyperlink aboutWebsite;
+    public final StringProperty aboutWebsiteProperty;
 
-    @FXML
-    private Label aboutLicense;
-
-    @FXML
-    private Label developersHeading;
-
-    @FXML
-    private Label developersContent;
-
-    @FXML
-    private Label authorsHeading;
-
-    @FXML
-    private Label authorsContent;
-
-    @FXML
-    private Label librariesHeading;
-
-    @FXML
-    private Hyperlink librariesContent;
-
-    @FXML
-    private Label codeHeading;
-
-    @FXML
-    private Hyperlink codeContent;
-
-    @FXML
-    private ImageView jabrefLogo;
-
-    @FXML
-    private Button closeButton;
-
-    @FXML
-    private Button copyButton;
-
-    @FXML
-    private void initialize() {
-        String header = String.format("JabRef %s", Globals.BUILD_INFO.getVersion());
-        aboutHeading.setText(header);
-
-        try (InputStream imageStream = JabRef.class.getResourceAsStream("/images/external/JabRef-icon-48.png");) {
-            jabrefLogo.setImage(new Image(imageStream));
-        } catch (IOException e) {
-            logger.debug("Could not find icon.", e);
-        }
-
+    public AboutDialogController() {
         String year = String.format("2003-%s", Globals.BUILD_INFO.getYear());
-        aboutYear.setText(year);
+        this.aboutYear = new SimpleStringProperty(year);
 
-        aboutWebsite.setText("http://www.jabref.org");
-
-        aboutLicense.setText("GNU General Public License v2 or later");
-
-        developersHeading.setText("Developers:");
-        developersContent.setText(Globals.BUILD_INFO.getDevelopers());
-
-        authorsHeading.setText("Authors:");
-        authorsContent.setText(Globals.BUILD_INFO.getAuthors());
-
-        librariesHeading.setText("External Libraries:");
-        librariesContent.setText("https://github.com/JabRef/jabref/blob/master/external-libraries.txt");
-
-        codeHeading.setText("Code:");
-        codeContent.setText("https://github.com/JabRef/jabref");
-
-        closeButton.setText(Localization.lang("Close"));
-
-        copyButton.setText(Localization.lang("Copy version"));
-    }
-
-    @FXML
-    private void closeAboutDialog() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void copyVersionToClipboard() {
-        ClipBoardManager.CLIPBOARD.setClipboardContents(Globals.BUILD_INFO.getVersion());
-        String message = String.format("%s - %s", Localization.lang("Copy version"), Globals.BUILD_INFO.getVersion());
-        JabRef.jrf.output(message);
+        this.aboutWebsiteProperty = new SimpleStringProperty("http://www.jabref.org");
     }
 
     @FXML
     private void openJabrefWebsite() {
-        try {
-            JabRefDesktop.openBrowser(aboutWebsite.getText());
-        } catch (IOException e) {
-            JabRef.jrf.output(Localization.lang("Error") + ": " + e.getLocalizedMessage());
-            logger.debug("Could not open default browser.", e);
-        }
+        aboutYear.set("Open website " + aboutWebsiteProperty.get());
     }
-
-    @FXML
-    private void openExternalLibrariesWebsite() {
-        try {
-            JabRefDesktop.openBrowser(librariesContent.getText());
-        } catch (IOException e) {
-            JabRef.jrf.output(Localization.lang("Error") + ": " + e.getLocalizedMessage());
-            logger.debug("Could not open default browser.", e);
-        }
-    }
-
-    @FXML
-    private void openGithub() {
-        try {
-            JabRefDesktop.openBrowser(codeContent.getText());
-        } catch (IOException e) {
-            JabRef.jrf.output(Localization.lang("Error") + ": " + e.getLocalizedMessage());
-            logger.debug("Could not open default browser.", e);
-        }
-    }
-
 }
