@@ -633,11 +633,11 @@ public class BibtexParserTest {
     }
 
     @Test
-    public void parseWarnsAboutEntryWithoutBibtexKey() throws IOException {
+    public void parseDoesNotWarnAboutEntryWithoutBibtexKey() throws IOException {
 
         ParserResult result = BibtexParser.parse(new StringReader("@article{,author={Ed von Test}}"));
 
-        assertTrue(result.hasWarnings());
+        assertFalse(result.hasWarnings());
 
         Collection<BibEntry> c = result.getDatabase().getEntries();
 

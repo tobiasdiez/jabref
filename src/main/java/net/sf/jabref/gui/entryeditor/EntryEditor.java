@@ -1421,12 +1421,11 @@ public class EntryEditor extends JPanel implements EntryContainer {
     }
 
     private void warnDuplicateBibtexkey() {
-        panel.output(Localization.lang("Duplicate BibTeX key") + ". "
-                + Localization.lang("Grouping may not work for this entry."));
+        panel.output(Localization.lang("Duplicate BibTeX key") + ". ");
     }
 
     private void warnEmptyBibtexkey() {
-        panel.output(Localization.lang("Empty BibTeX key")+". "+Localization.lang("Grouping may not work for this entry."));
+        panel.output(Localization.lang("Empty BibTeX key")+". ");
     }
 
 

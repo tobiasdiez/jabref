@@ -223,9 +223,6 @@ public class BibtexParser {
             entry.setParsedSerialization(dumpTextReadSoFarToString());
             if (duplicateKey) {
                 parserResult.addDuplicateKey(entry.getCiteKey());
-            } else if ((entry.getCiteKey() == null) || entry.getCiteKey().isEmpty()) {
-                parserResult.addWarning(Localization.lang("Empty BibTeX key") + ": " + entry.getAuthorTitleYear(40)
-                        + " (" + Localization.lang("Grouping may not work for this entry.") + ")");
             }
         } catch (IOException ex) {
             LOGGER.warn("Could not parse entry", ex);

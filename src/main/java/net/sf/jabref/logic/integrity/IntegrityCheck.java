@@ -68,6 +68,7 @@ public class IntegrityCheck {
         result.addAll(new HTMLCharacterChecker().check(entry));
         result.addAll(new BooktitleChecker().check(entry));
         result.addAll(new ISSNChecker().check(entry));
+        result.addAll(new EmptyKeyChecker().check(entry));
 
         return result;
     }
@@ -439,4 +440,18 @@ public class IntegrityCheck {
         }
     }
 
+    private static class EmptyKeyChecker implements Checker {
+
+        /**
+         * Checks, if the cite key is empty
+         */
+        @Override
+        public List<IntegrityMessage> check(BibEntry entry) {
+            List<IntegrityMessage> results = new ArrayList<>();
+            if ((entry.getCiteKey() == null) || entry.getCiteKey().isEmpty()) {
+                results.add(new IntegrityMessage(Localization.lang("Empty BibTeX key"), entry, BibEntry.KEY_FIELD));
+            }
+            return results;
+        }
+    }
 }

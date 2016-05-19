@@ -203,8 +203,16 @@ public class IntegrityCheckTest {
         assertWrong(createContext("issn", "0020-7218"));
     }
 
+    @Test
+    public void testEmptyKeyChecks() {
+        assertCorrect(createContext(BibEntry.KEY_FIELD, "something"));
+        assertCorrect(createContext("someotherfield", "some value"));
+        assertWrong(createContext(BibEntry.KEY_FIELD, ""));
+    }
+
     private BibDatabaseContext createContext(String field, String value, String type) {
         BibEntry entry = new BibEntry();
+        entry.setCiteKey("some key");
         entry.setField(field, value);
         entry.setType(type);
         BibDatabase bibDatabase = new BibDatabase();
@@ -214,6 +222,7 @@ public class IntegrityCheckTest {
 
     private BibDatabaseContext createContext(String field, String value, MetaData metaData) {
         BibEntry entry = new BibEntry();
+        entry.setCiteKey("some key");
         entry.setField(field, value);
         BibDatabase bibDatabase = new BibDatabase();
         bibDatabase.insertEntry(entry);
