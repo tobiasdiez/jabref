@@ -1427,7 +1427,7 @@ public class ImportInspectionDialog extends JDialog implements ImportInspector, 
                         FileListTableModel model = new FileListTableModel();
                         model.setContent(entry.getField(Globals.FILE_FIELD));
                         fileLabel.setToolTipText(model.getToolTipHTMLRepresentation());
-                        if (model.getRowCount() > 0) {
+                        if (model.getRowCount() > 0 && model.getEntry(0).type.isPresent()) {
                             fileLabel.setIcon(model.getEntry(0).type.get().getIcon());
                         }
                         return fileLabel;
