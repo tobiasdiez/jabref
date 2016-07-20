@@ -17,7 +17,7 @@
 
 package net.sf.jabref.importer.fetcher;
 
-import net.sf.jabref.gui.help.HelpFile;
+import net.sf.jabref.logic.help.HelpFile;
 
 /**
  * Searches web resources for bibliographic information.

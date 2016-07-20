@@ -13,7 +13,7 @@
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-package net.sf.jabref.gui.help;
+package net.sf.jabref.logic.help;
 
 /**
  * This enum globally defines all help pages with the name of the markdown file in the help repository at Github.
